@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/inconshreveable/log15.svg?branch=master)](https://travis-ci.org/gernoteger/log15-gelf)
 
 # Gelf Handler for log15
-Adds the [GELF](http://docs.graylog.org/en/2.1/pages/gelf.html) format for Graylog-based logging to the (log15)[https://github.com/inconshreveable/log15] logging library.
+Adds the [GELF](http://docs.graylog.org/en/2.1/pages/gelf.html) format for Graylog-based logging to the [log15](https://github.com/inconshreveable/log15) logging library.
 GELF can be udp+tcp based, and supports chunking with udp, thus avoiding reconnection- and performance issues.
 
 # Duplicate keys
@@ -19,3 +19,7 @@ This implementation assures that only the last value is used for this key.
 # Limitations
 - only supports udp with gzip compression.
 - buffer size not adjustable
+
+# License
+
+Released under the [MIT License](LICENSE).
