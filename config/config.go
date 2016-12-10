@@ -35,6 +35,6 @@ func NewGelfConfig() interface{} {
 }
 
 func (c *GelfConfig) NewHandler() (log15.Handler, error) {
-	h, err := gelf.GelfHandler(c.Address)
+	h, err := gelf.Handler(c.Address)
 	return h, err
 }

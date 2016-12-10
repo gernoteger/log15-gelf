@@ -36,7 +36,9 @@ type Writer struct {
 type CompressType int
 
 const (
+	// CompressGzip indicates gzip compression
 	CompressGzip CompressType = iota
+	// CompressZlib indicates zlib compression
 	CompressZlib
 )
 
@@ -83,7 +85,7 @@ func numChunks(b []byte) int {
 	return len(b)/chunkedDataLen + 1
 }
 
-// New returns a new GELF Writer.  This writer can be used to send the
+// NewWriter returns a new GELF Writer.  This writer can be used to send the
 // output of the standard Go log functions to a central GELF server by
 // passing it to log.SetOutput()
 func NewWriter(addr string) (*Writer, error) {
@@ -118,8 +120,8 @@ func (w *Writer) writeChunked(zBytes []byte) (err error) {
 	}
 	nChunks := uint8(nChunksI)
 	// use urandom to get a unique message id
-	msgId := make([]byte, 8)
-	n, err := io.ReadFull(rand.Reader, msgId)
+	msgID := make([]byte, 8)
+	n, err := io.ReadFull(rand.Reader, msgID)
 	if err != nil || n != 8 {
 		return fmt.Errorf("rand.Reader: %d/%s", n, err)
 	}
@@ -131,7 +133,7 @@ func (w *Writer) writeChunked(zBytes []byte) (err error) {
 		// host/network byte order, because the spec only
 		// deals in individual bytes.
 		buf.Write(magicChunked) //magic
-		buf.Write(msgId)
+		buf.Write(msgID)
 		buf.WriteByte(i)
 		buf.WriteByte(nChunks)
 		// slice out our chunk from zBytes
@@ -261,6 +263,7 @@ func (w *Writer) Warning(m string) (err error)
 //	return len(p), nil
 //}
 
+// MarshalJSON marshals a message to json
 func (m *Message) MarshalJSON() ([]byte, error) {
 	var err error
 	var b, eb []byte
@@ -285,6 +288,7 @@ func (m *Message) MarshalJSON() ([]byte, error) {
 	return append(b, eb[1:]...), nil
 }
 
+// UnmarshalJSON unmarshals a message from json
 func (m *Message) UnmarshalJSON(data []byte) error {
 	i := make(map[string]interface{}, 16)
 	if err := json.Unmarshal(data, &i); err != nil {

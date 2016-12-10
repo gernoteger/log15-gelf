@@ -7,19 +7,19 @@ import (
 )
 
 // Handler sends logs to Graylog in GELF.
-type gelfHandler struct {
+type handler struct {
 	gelfWriter *Writer
 	host       string
 }
 
-// GelfHandler returns a handler that writes GELF messages to a service at gelfAddr. It is already wrapped
+// Handler returns a handler that writes GELF messages to a service at gelfAddr. It is already wrapped
 // in log15's CallerFileHandler and SyncHandler helpers. Its error is non-nil if there
 // is a problem creating the GELF writer or determining our hostname.
 // address is in the format host:port.
 //
 //     h,err:=gelf.GelfHandler("myhost:12201")
 //
-func GelfHandler(address string) (log15.Handler, error) {
+func Handler(address string) (log15.Handler, error) {
 	w, err := NewWriter(address)
 	if err != nil {
 		return nil, err
@@ -30,14 +30,14 @@ func GelfHandler(address string) (log15.Handler, error) {
 		return nil, err
 	}
 
-	return log15.CallerFileHandler(log15.LazyHandler(log15.SyncHandler(gelfHandler{
+	return log15.CallerFileHandler(log15.LazyHandler(log15.SyncHandler(handler{
 		gelfWriter: w,
 		host:       host,
 	}))), nil
 }
 
 // Log forwards a log message to the specified receiver.
-func (h gelfHandler) Log(r *log15.Record) error {
+func (h handler) Log(r *log15.Record) error {
 
 	// extract gelf-specific messages
 	short, full := shortAndFull(r.Msg)
@@ -84,5 +84,5 @@ type muster struct{}
 
 // GelfHandler provides a panicking version
 func (m muster) GelfHandler(address string) log15.Handler {
-	return must(GelfHandler(address))
+	return must(Handler(address))
 }
