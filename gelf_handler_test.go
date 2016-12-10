@@ -21,7 +21,7 @@ func TestCtxToMap(t *testing.T) {
 	}
 	ctx := []interface{}{"msg", "a message", "foo", "bar", "foo", "baz", "number", 1, "t", logTime}
 
-	cm := CtxToMap(ctx)
+	cm := ctxToMap(ctx)
 
 	for k, v := range expected {
 		if cm[k] != v {

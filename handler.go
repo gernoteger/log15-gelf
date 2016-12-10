@@ -15,7 +15,7 @@ type gelfHandler struct {
 // GelfHandler returns a handler that writes GELF messages to a service at gelfAddr. It is already wrapped
 // in log15's CallerFileHandler and SyncHandler helpers. Its error is non-nil if there
 // is a problem creating the GELF writer or determining our hostname.
-// address is in teh format host:port.
+// address is in the format host:port.
 //
 //     log.GelfHandler("myhost:12201")
 //
@@ -40,9 +40,9 @@ func GelfHandler(address string) (log15.Handler, error) {
 func (h gelfHandler) Log(r *log15.Record) error {
 
 	// extract gelf-specific messages
-	short, full := ShortAndFull(r.Msg)
-	ctx := CtxToMap(r.Ctx)
-	callerFile, callerLine := Caller(ctx)
+	short, full := shortAndFull(r.Msg)
+	ctx := ctxToMap(r.Ctx)
+	callerFile, callerLine := caller(ctx)
 	delete(ctx, "_caller")
 
 	m := &Message{
@@ -70,6 +70,7 @@ var log15LevelsToSyslog = map[log15.Lvl]int32{
 	log15.LvlDebug: 7,
 }
 
+// Must encapsulates GelfHandler and panics if it returns an error.
 var Must muster
 
 func must(h log15.Handler, err error) log15.Handler {

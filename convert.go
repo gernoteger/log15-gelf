@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func CtxToMap(ctx []interface{}) map[string]interface{} {
+func ctxToMap(ctx []interface{}) map[string]interface{} {
 	m := make(map[string]interface{}, len(ctx)/2)
 	for i := 0; i < len(ctx); i += 2 {
 		s := ctx[i].(string)
@@ -15,7 +15,7 @@ func CtxToMap(ctx []interface{}) map[string]interface{} {
 	return m
 }
 
-func ShortAndFull(msg string) (short string, full string) {
+func shortAndFull(msg string) (short string, full string) {
 	lines := strings.SplitN(msg, "\n", 2)
 	short = lines[0]
 	if len(lines) > 1 {
@@ -27,7 +27,7 @@ func ShortAndFull(msg string) (short string, full string) {
 
 // caller searches a context list for an entry called "caller" and splits it into
 // filename and line number.
-func Caller(ctx map[string]interface{}) (string, int) {
+func caller(ctx map[string]interface{}) (string, int) {
 	info, present := ctx["_caller"]
 	if !present {
 		return "", 0

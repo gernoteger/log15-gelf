@@ -12,11 +12,15 @@ import (
 	"sync"
 )
 
+// Reader provides interanl structures for a Reader
 type Reader struct {
 	mu   sync.Mutex
 	conn net.Conn
 }
 
+// NewReader returns a reader listening to udp traffic at an address in the form "host:port". if port is 0, a new free
+// address is taken. Retrieve it with Addr().
+// The reader is mainly intended for testing
 func NewReader(addr string) (*Reader, error) {
 	var err error
 	udpAddr, err := net.ResolveUDPAddr("udp", addr)
@@ -34,11 +38,15 @@ func NewReader(addr string) (*Reader, error) {
 	return r, nil
 }
 
+// Addr returns the address a Reader is listening on.
 func (r *Reader) Addr() string {
 	return r.conn.LocalAddr().String()
 }
 
 // FIXME: this will discard data if p isn't big enough to hold the
+// full message.
+
+// Read reads date into a fixed size buffer. ATTN: this will discard data if p isn't big enough to hold the
 // full message.
 func (r *Reader) Read(p []byte) (int, error) {
 	msg, err := r.ReadMessage()
@@ -57,6 +65,7 @@ func (r *Reader) Read(p []byte) (int, error) {
 	return strings.NewReader(data).Read(p)
 }
 
+// ReadMessage reads a Message
 func (r *Reader) ReadMessage() (*Message, error) {
 	cBuf := make([]byte, ChunkSize)
 	var (

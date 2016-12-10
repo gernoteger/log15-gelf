@@ -31,7 +31,7 @@ type Writer struct {
 	CompressionType  CompressType
 }
 
-// What compression type the writer should use when sending messages
+// CompressType tells  what compression type the writer should use when sending messages
 // to the graylog2 server
 type CompressType int
 
