@@ -8,6 +8,31 @@ import (
 	"github.com/inconshreveable/log15"
 )
 
+func TestCtxToMap(t *testing.T) {
+
+	loc, err := time.LoadLocation("Europe/Vienna")
+	if err != nil {
+		t.Fatalf("can't load Timezone: %v", err)
+	}
+	logTime := time.Date(2016, 11, 23, 13, 01, 02, 123100*1e3, loc)
+
+	expected := map[string]interface{}{
+		"_msg":    "a message",
+		"_foo":    "baz",
+		"_number": 1,
+		"_t":      logTime,
+	}
+	ctx := []interface{}{"msg", "a message", "foo", "bar", "foo", "baz", "number", 1, "t", logTime}
+
+	cm := ctxToMap(ctx)
+
+	for k, v := range expected {
+		if cm[k] != v {
+			t.Fatalf("%v: expected: '%v', got: %v", k, v, cm[k])
+		}
+	}
+}
+
 const SyslogInfoLevel = 6
 
 func TestGelfHandler(t *testing.T) {
@@ -33,7 +58,7 @@ func TestGelfHandler(t *testing.T) {
 		Call: stack.Caller(0),
 	}
 
-	h := log15.Must.GelfHandler(r.Addr())
+	h := Must.GelfHandler(r.Addr())
 
 	h.Log(&rec)
 
