@@ -79,8 +79,8 @@ func TestGelfHandler(t *testing.T) {
 	if len(msg.Extra) != 2 {
 		t.Fatalf("msg.Extra length expected: '%v', got: %v", 2, len(msg.Extra))
 	}
-	if msg.File != "log15_test.go" {
-		t.Fatalf("msg.File expected: '%v', got: %v", "log15_test.go", msg.File)
+	if msg.File != "gelf_test.go" {
+		t.Fatalf("msg.File expected: '%v', got: %v", "gelf_test.go", msg.File)
 	}
 
 	// no tests for line; this would be too unstable..
