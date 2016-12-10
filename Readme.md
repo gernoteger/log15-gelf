@@ -6,6 +6,15 @@
 Adds the [GELF](http://docs.graylog.org/en/2.1/pages/gelf.html) format for Graylog-based logging to the [log15](https://github.com/inconshreveable/log15) logging library.
 GELF can be udp+tcp based, and supports chunking with udp, thus avoiding reconnection- and performance issues.
 
+# Usage
+
+create a Handler with:
+
+     h,err:=gelf.GelfHandler("myhost:12201")
+Currently only udp is transport implemented. You can also use [log15-config)[https://github.com/gernoteger/log15-config] 
+with the [config](config) package from this repo.
+
+
 # Duplicate keys
 Currently log15 will append duplicate keys to the contect list. Gelf expects a map, therefore keys have to be unique.
 This implementation assures that only the last value is used for this key.

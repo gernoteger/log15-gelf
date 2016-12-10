@@ -17,7 +17,7 @@ type gelfHandler struct {
 // is a problem creating the GELF writer or determining our hostname.
 // address is in the format host:port.
 //
-//     log.GelfHandler("myhost:12201")
+//     h,err:=gelf.GelfHandler("myhost:12201")
 //
 func GelfHandler(address string) (log15.Handler, error) {
 	w, err := NewWriter(address)
