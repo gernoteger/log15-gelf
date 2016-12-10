@@ -1,6 +1,6 @@
-[![GoDoc](https://godoc.org/github.com/gernoteger/mapstructure-hooks?status.svg)](https://godoc.org/github.com/gernoteger/log15-gelf)
-[![Go Report Card](https://goreportcard.com/badge/gernoteger/mapstructure-hooks)](https://goreportcard.com/report/gernoteger/log15-gelf)
-[![Build Status](https://travis-ci.org/inconshreveable/log15.svg?branch=master)](https://travis-ci.org/gernoteger/log15-gelf)
+[![GoDoc](https://godoc.org/github.com/gernotegerlog15-gelf?status.svg)](https://godoc.org/github.com/gernoteger/log15-gelf)
+[![Go Report Card](https://goreportcard.com/badge/gernoteger/log15-gelf)](https://goreportcard.com/report/gernoteger/log15-gelf)
+[![Build Status](https://travis-ci.org/gernoteger/log15-gelf.svg?branch=master)](https://travis-ci.org/gernoteger/log15-gelf)
 
 # Gelf Handler for log15
 Adds the [GELF](http://docs.graylog.org/en/2.1/pages/gelf.html) format for Graylog-based logging to the [log15](https://github.com/inconshreveable/log15) logging library.
