@@ -11,7 +11,7 @@ GELF can be udp+tcp based, and supports chunking with udp, thus avoiding reconne
 create a Handler with:
 
      h,err:=gelf.Handler("myhost:12201")
-Currently only udp is transport implemented. You can also use [log15-config)[https://github.com/gernoteger/log15-config] 
+Currently only udp is transport implemented. You can also use [log15-config](https://github.com/gernoteger/log15-config)
 with the [config](config) package from this repo.
 
 
