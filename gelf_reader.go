@@ -139,9 +139,14 @@ func (r *Reader) ReadMessage() (*Message, error) {
 	}
 
 	msg := new(Message)
+
+	//fmt.Printf(string(buf.Bytes()))
+
 	if err := json.Unmarshal(buf.Bytes(), &msg); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal: %s", err)
 	}
+
+	//spew.Dump(msg)
 
 	return msg, nil
 }

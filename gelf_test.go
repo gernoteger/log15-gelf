@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-stack/stack"
 	"github.com/inconshreveable/log15"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCtxToMap(t *testing.T) {
@@ -33,10 +34,20 @@ func TestCtxToMap(t *testing.T) {
 	}
 }
 
+type SomeStruct struct {
+	Foo, Bar string
+}
+
+func (s SomeStruct) String() string {
+	return s.Foo + "-" + s.Bar
+}
+
 const SyslogInfoLevel = 6
 
 func TestGelfHandler(t *testing.T) {
 	t.Parallel()
+
+	assert := assert.New(t)
 
 	r, err := NewReader("127.0.0.1:0")
 	if err != nil {
@@ -51,10 +62,10 @@ func TestGelfHandler(t *testing.T) {
 
 	msgData := "test message\nsecond line"
 	rec := log15.Record{
-		Time: logTime, //TODO: set fixed!!
+		Time: logTime,
 		Lvl:  log15.LvlInfo,
 		Msg:  msgData,
-		Ctx:  []interface{}{"foo", "bar", "withField", "1", "foo", "baz"}, // no fields yet
+		Ctx:  []interface{}{"foo", "bar", "withField", 1, "foo", "baz", "struct", SomeStruct{"foo", "bar"}}, // no fields yet
 		Call: stack.Caller(0),
 	}
 
@@ -76,24 +87,27 @@ func TestGelfHandler(t *testing.T) {
 	if msg.Level != SyslogInfoLevel {
 		t.Fatalf("msg.Level expected: '%v', got: %v", SyslogInfoLevel, msg.Level)
 	}
-	if len(msg.Extra) != 2 {
-		t.Fatalf("msg.Extra length expected: '%v', got: %v", 2, len(msg.Extra))
+	if len(msg.Extra) != 3 {
+		t.Fatalf("msg.Extra length expected: '%v', got: %v", 3, len(msg.Extra))
 	}
 	if msg.File != "gelf_test.go" {
 		t.Fatalf("msg.File expected: '%v', got: %v", "gelf_test.go", msg.File)
 	}
-
 	// no tests for line; this would be too unstable..
-	extra := map[string]string{"foo": "baz", "withField": "1"}
 
+	// also not very robust as tests
+	extra := map[string]interface{}{"foo": "baz", "withField": 1} //, "struct": map[string]string{"Foo": "foo", "Bar": "bar"}
+
+	//fmt.Println("===========")
+	//spew.Dump(msg.Extra)
 	for k, v := range extra {
 		// extra fields are prefixed with "_"
-		val, ok := msg.Extra["_"+k].(string)
+		val, ok := msg.Extra["_"+k]
 		if !ok {
-			t.Fatalf("no key foundfor %v", k)
+			t.Fatalf("no key found for '%v'", k)
 		}
 		if val != v {
-			t.Fatalf("extra[%v] expected: '%v', got: '%v'", k, v, val)
+			assert.EqualValues(v, val, "extra[%v]", k)
 		}
 	}
 
