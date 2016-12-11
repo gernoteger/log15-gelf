@@ -4,8 +4,8 @@ Package config is for interfacing with [log15-config](https://github.com/gernote
 
 # Usage
 
-Just add to yout imports:
+Just add to your imports:
 
     _ "github.com/gernoteger/log15-config"
     
-Be careful that the package with thsi import is also init'ed during execution, otherwise your config swon't resolve!
+Be careful that the package with this import is also init'ed during execution, otherwise your configs won't resolve!
